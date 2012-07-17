@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+       default-lazy-init="true">
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="annotatedClasses">
+            <list>
+                <value>mr.xuckz.monitoringTool.model.Client</value>
+                <value>mr.xuckz.monitoringTool.model.FileSystem</value>
+                <value>mr.xuckz.monitoringTool.model.Performance</value>
+                <value>mr.xuckz.monitoringTool.model.Status</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.transaction.factory_class">
+                    org.hibernate.transaction.JDBCTransactionFactory
+                </prop>
+                <prop key="hibernate.dialect">
+                    org.hibernate.dialect.HSQLDialect
+                </prop>
+                <prop key="hibernate.connection.pool_size">0</prop>
+                <prop key="hibernate.connection.driver_class">
+                    org.hsqldb.jdbcDriver
+                </prop>
+                <prop key="hibernate.connection.url">
+                    jdbc:hsqldb:data/status;shutdown=true
+                </prop>
+                <prop key="hibernate.connection.username">sa</prop>
+                <prop key="hibernate.connection.password"></prop>
+                <prop key="hibernate.connection.autocommit">true</prop>
+                <prop key="hibernate.jdbc.batch_size">0</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="clientDAO"
+          class="mr.xuckz.monitoringTool.persist.ClientDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="statusDAO"
+          class="mr.xuckz.monitoringTool.persist.StatusDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+</beans>

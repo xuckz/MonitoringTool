@@ -1,0 +1,7 @@
+<b>Current Status for:
+${status.client.ip}, ${status.client.name}
+</b><br/>
+
+<ul>
+<li>Date: ${status.date}</li>
+</ul>

@@ -3,6 +3,8 @@ package mr.xuckz.monitoringTool.servlet;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
+import mr.xuckz.monitoringTool.config.ConfigParameters;
+import mr.xuckz.monitoringTool.config.ConfigParametersLoader;
 import mr.xuckz.monitoringTool.handler.SqlHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +18,29 @@ import java.util.List;
 
 public class TestServlet extends HttpServlet
 {
+    private final ConfigParameters config;
+
 	static final Logger log = LoggerFactory.getLogger(TestServlet.class);
+
+    public TestServlet()
+    {
+        config = ConfigParametersLoader.loadParameters();
+    }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		if ("y".equals(request.getParameter("test")))
+        if(config == null)
+        {
+            response.setContentType("text/html");
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            response.getWriter().println("<h1>ERROR - view logs</h1>");
+        }
+
+
+		else if ("y".equals(request.getParameter("Status")))
 		{
-			log.debug("test called");
+			log.debug("Status called");
 
 			response.setContentType("text/html");
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -37,7 +55,7 @@ public class TestServlet extends HttpServlet
 			response.setContentType("text/html");
 			response.setStatus(HttpServletResponse.SC_OK);
 
-			SqlHandler sqlHandler = new SqlHandler();
+			SqlHandler sqlHandler = new SqlHandler(config);
 
 			if(sqlHandler.connect())
 			{

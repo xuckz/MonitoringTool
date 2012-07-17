@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class monitoringTool extends AbstractHandler
+public class MonitoringTool extends AbstractHandler
 {
 	public void handle(String target,
 					   Request baseRequest,
@@ -26,7 +26,7 @@ public class monitoringTool extends AbstractHandler
 	public static void main(String[] args) throws Exception
 	{
 		Server server = new Server(8080);
-		server.setHandler(new monitoringTool());
+		server.setHandler(new MonitoringTool());
 
 		server.start();
 		server.join();

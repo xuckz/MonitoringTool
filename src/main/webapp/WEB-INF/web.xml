@@ -4,12 +4,37 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		version="2.5">
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- Status servlets -->
 	<servlet>
 		<servlet-name>Hello</servlet-name>
 		<servlet-class>mr.xuckz.monitoringTool.servlet.TestServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>test</servlet-name>
+		<servlet-name>Hello</servlet-name>
 		<url-pattern>/test/*</url-pattern>
 	</servlet-mapping>
+
+
+    <!-- struts and spring Status -->
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>
+                /WEB-INF/struts-config.xml
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
 </web-app>

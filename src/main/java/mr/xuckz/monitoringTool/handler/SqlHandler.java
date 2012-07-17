@@ -1,5 +1,9 @@
 package mr.xuckz.monitoringTool.handler;
 
+import mr.xuckz.monitoringTool.config.ConfigParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,76 +11,83 @@ import java.sql.SQLException;
 public class SqlHandler
 {
 	private String DRIVER;
-	private String HOST;
-	private String PORT;
+	private String ADDRESS;
 	private String DATABASE;
 	private String USER;
 	private String PASSWORD;
 
+    private boolean isConnected;
+
 	private Connection connection = null;
 
-	public SqlHandler()
+    static final Logger log = LoggerFactory.getLogger(SqlHandler.class);
+
+	public SqlHandler(ConfigParameters config)
 	{
-		DRIVER = "org.postgresql.Driver";
-		HOST = "192.168.255.50";
-		PORT = "5432";
-		DATABASE = "postgres";
-		USER = "postgres";
-		PASSWORD = "";
+        this.DRIVER = config.getDRIVER();
+        this.ADDRESS = config.getADDRESS();
+        this.DATABASE = config.getDATABASE();
+        this.USER = config.getUSER();
+        this.PASSWORD = config.getPASSWORD();
 	}
 
-	public void disconnect()
-	{
-		try
-		{
-			connection.close();
-		}
 
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-
-		System.out.println("\nconnection closed");
-	}
-
+    //## CONNECTION
 	private String getUrl()
 	{
-		// jdbc:postgresql://host:port/database
-		return ("jdbc:postgresql://" + HOST + ":" + PORT + "/" + DATABASE);
+		return (ADDRESS + "/" + DATABASE);
 	}
 
-	private boolean loadJdbcDriver()
-	{
-		try
-		{
-			Class.forName(DRIVER);
-		}
+    public void disconnect()
+    {
+        isConnected = false;
 
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+        try
+        {
+            if(connection != null)
+                connection.close();
+        }
 
-		System.out.println("driver loaded");
-		return true;
-	}
+        catch (SQLException e)
+        {
+            log.error("Disconnect Failed!", e);
+        }
+    }
 
-	public boolean connect()
-	{
-		try
-		{
-			connection = DriverManager.getConnection(getUrl(), USER, PASSWORD);
-		}
+    public boolean connect()
+    {
+        if(!checkForDriver(DRIVER))
+            return false;
 
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+        connection = null;
 
-		System.out.println("connection opened");
-		return true;
-	}
+        try
+        {
+            connection = DriverManager.getConnection(getUrl(), USER, PASSWORD);
+            isConnected = true;
+            return true;
+        }
+
+        catch (SQLException sqle)
+        {
+            log.error("Connection Failed!", sqle);
+            isConnected = false;
+            return false;
+        }
+    }
+
+    private boolean checkForDriver(String DRIVER)
+    {
+        try
+        {
+            Class.forName(DRIVER);
+            return true;
+        }
+
+        catch (ClassNotFoundException e)
+        {
+            log.error("PostgreSQL JDBC Driver not found", e);
+            return false;
+        }
+    }
 }
