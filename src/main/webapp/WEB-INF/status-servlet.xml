@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="currentStatusController"
+          class="mr.xuckz.monitoringTool.web.controller.CurrentStatusController">
+        <property name="statusService" ref="statusService"/>
+        <property name="statusDAO" ref="statusDAO"/>
+    </bean>
+
+    <bean id="historyStatusController"
+          class="mr.xuckz.monitoringTool.web.controller.HistoryStatusController">
+        <property name="statusDAO" ref="statusDAO"/>
+        <property name="clientDAO" ref="clientDAO"/>
+    </bean>
+
+    <!-- you can have more than one handler defined -->
+    <bean id="urlMapping"
+          class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <map>
+                <entry key="/status.x">
+                    <ref bean="currentStatusController"/>
+                </entry>
+                <entry key="/history.x">
+                    <ref bean="historyStatusController"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean id="velocityConfig"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/vm/"/>
+    </bean>
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".vm"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+    </bean>
+</beans>

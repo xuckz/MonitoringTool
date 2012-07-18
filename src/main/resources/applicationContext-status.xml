@@ -6,7 +6,7 @@
                            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
        default-lazy-init="true">
 
-    <bean id="statusService" class="mr.xuckz.monitoringTool.services.StatusService">
+    <bean id="statusService" class="mr.xuckz.monitoringTool.web.services.StatusService">
         <property name="statusHandler" ref="statusHandler"/>
     </bean>
 

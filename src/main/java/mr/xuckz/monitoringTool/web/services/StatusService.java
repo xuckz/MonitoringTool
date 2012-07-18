@@ -1,7 +1,7 @@
-package mr.xuckz.monitoringTool.services;
+package mr.xuckz.monitoringTool.web.services;
 
 import mr.xuckz.monitoringTool.handler.StatusHandler;
-import mr.xuckz.monitoringTool.model.Status;
+import mr.xuckz.monitoringTool.web.model.Status;
 
 public class StatusService
 {

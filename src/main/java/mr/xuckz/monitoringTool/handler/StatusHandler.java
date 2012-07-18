@@ -1,9 +1,9 @@
 package mr.xuckz.monitoringTool.handler;
 
-import mr.xuckz.monitoringTool.model.Client;
-import mr.xuckz.monitoringTool.model.FileSystem;
-import mr.xuckz.monitoringTool.model.Performance;
-import mr.xuckz.monitoringTool.model.Status;
+import mr.xuckz.monitoringTool.web.model.Client;
+import mr.xuckz.monitoringTool.web.model.FileSystem;
+import mr.xuckz.monitoringTool.web.model.Performance;
+import mr.xuckz.monitoringTool.web.model.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

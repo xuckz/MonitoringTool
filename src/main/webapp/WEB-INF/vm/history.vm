@@ -1,0 +1,10 @@
+<b>
+Client History for: ${client.ip}, ${client.name}
+</b>
+<br/>
+
+#foreach( $status in $statuses )
+<ul>
+<li>CPU: $status.performance.cpu</li>
+</ul>
+#end

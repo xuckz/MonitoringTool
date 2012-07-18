@@ -1,4 +1,4 @@
-package mr.xuckz.monitoringTool.model;
+package mr.xuckz.monitoringTool.web.model;
 
 import javax.persistence.*;
 

@@ -1,8 +1,8 @@
-package mr.xuckz.monitoringTool.controller;
+package mr.xuckz.monitoringTool.web.controller;
 
-import mr.xuckz.monitoringTool.model.Status;
+import mr.xuckz.monitoringTool.web.model.Status;
 import mr.xuckz.monitoringTool.persist.StatusDAO;
-import mr.xuckz.monitoringTool.services.StatusService;
+import mr.xuckz.monitoringTool.web.services.StatusService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CurrentStatusController implements Controller
 {
-
     private StatusService statusService;
     private StatusDAO statusDAO;
 

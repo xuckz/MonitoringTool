@@ -1,7 +1,7 @@
 package mr.xuckz.monitoringTool.persist;
 
-import mr.xuckz.monitoringTool.model.Client;
-import mr.xuckz.monitoringTool.model.Status;
+import mr.xuckz.monitoringTool.web.model.Client;
+import mr.xuckz.monitoringTool.web.model.Status;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -28,7 +28,7 @@ public class StatusDAO extends HibernateDaoSupport
     }
 
     @SuppressWarnings("unchecked")
-    public List<Status> recentForLocation(final Client client)
+    public List<Status> recentForClient(final Client client)
     {
         return (List<Status>) getHibernateTemplate().execute(
                 new HibernateCallback()

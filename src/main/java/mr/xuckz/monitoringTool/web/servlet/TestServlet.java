@@ -1,10 +1,11 @@
-package mr.xuckz.monitoringTool.servlet;
+package mr.xuckz.monitoringTool.web.servlet;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
 import mr.xuckz.monitoringTool.config.ConfigParameters;
 import mr.xuckz.monitoringTool.config.ConfigParametersLoader;
+import mr.xuckz.monitoringTool.handler.SnmpHandler;
 import mr.xuckz.monitoringTool.handler.SqlHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,22 @@ public class TestServlet extends HttpServlet
 
 			response.getWriter().println("<h1>LOG TEST</h1>");
 		}
+
+        else if ("y".equals(request.getParameter("snmptest")))
+        {
+            log.debug("snmptest called");
+
+            response.setContentType("text/html");
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            response.getWriter().println("<h1>SNMP TEST</h1>");
+
+            if(request.getParameter("oid") != null)
+                response.getWriter().println("result: " + SnmpHandler.snmpGet("192.168.5.123", "public", request.getParameter("oid")));
+
+            else
+                response.getWriter().println("oid not found");
+        }
 
 		else if ("y".equals(request.getParameter("logstatus")))
 		{
