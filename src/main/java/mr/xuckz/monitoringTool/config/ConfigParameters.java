@@ -1,22 +1,40 @@
 package mr.xuckz.monitoringTool.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class ConfigParameters
 {
+    private static final Logger log = LoggerFactory.getLogger(ConfigParameters.class);
+
     private String DRIVER;
     private String ADDRESS;
     private String DATABASE;
     private String USER;
     private String PASSWORD;
 
+    private List<String> clientIpList;
+
     public ConfigParameters(Properties properties)
     {
-        this.setADDRESS(properties.getProperty("db.address"));
-        this.setDATABASE(properties.getProperty("db.database"));
-        this.setDRIVER(properties.getProperty("db.driver"));
-        this.setPASSWORD(properties.getProperty("db.password"));
-        this.setUSER(properties.getProperty("db.user"));
+        this.ADDRESS = properties.getProperty("db.address");
+        this.DATABASE = properties.getProperty("db.database");
+        this.DRIVER = properties.getProperty("db.driver");
+        this.PASSWORD = properties.getProperty("db.password");
+        this.USER = properties.getProperty("db.user");
+
+        clientIpList = new ArrayList<String>();
+        int count = 1;
+        while(properties.getProperty("client.ip." + Integer.toString(count)) != null)
+        {
+            clientIpList.add(properties.getProperty("client.ip." + Integer.toString(count)));
+            log.debug("Client with ip: '{}' added.", properties.getProperty("client.ip." + Integer.toString(count)));
+            count++;
+        }
     }
 
     public String getDRIVER()
@@ -24,19 +42,9 @@ public class ConfigParameters
         return DRIVER;
     }
 
-    public void setDRIVER(String DRIVER)
-    {
-        this.DRIVER = DRIVER;
-    }
-
     public String getADDRESS()
     {
         return ADDRESS;
-    }
-
-    public void setADDRESS(String ADDRESS)
-    {
-        this.ADDRESS = ADDRESS;
     }
 
     public String getDATABASE()
@@ -44,19 +52,9 @@ public class ConfigParameters
         return DATABASE;
     }
 
-    public void setDATABASE(String DATABASE)
-    {
-        this.DATABASE = DATABASE;
-    }
-
     public String getUSER()
     {
         return USER;
-    }
-
-    public void setUSER(String USER)
-    {
-        this.USER = USER;
     }
 
     public String getPASSWORD()
@@ -64,8 +62,8 @@ public class ConfigParameters
         return PASSWORD;
     }
 
-    public void setPASSWORD(String PASSWORD)
+    public List<String> getClientIpList()
     {
-        this.PASSWORD = PASSWORD;
+        return clientIpList;
     }
 }

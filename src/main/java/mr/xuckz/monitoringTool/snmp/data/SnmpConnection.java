@@ -1,4 +1,4 @@
-package mr.xuckz.monitoringTool.snmp.util;
+package mr.xuckz.monitoringTool.snmp.data;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,24 +16,22 @@ public class SnmpConnection
 {
     static final Logger log = LoggerFactory.getLogger(SnmpConnection.class);
 
-    private String ip = null;
-    private String community = null;
-    private CommunityTarget communityTarget = null;
-    private Snmp snmp = null;
+    private String ip;
+    private String community;
+    private CommunityTarget communityTarget;
+    private Snmp snmp;
+    private SnmpObject snmpObject;
 
-    public SnmpConnection()
-    {
-    }
+    private boolean established;
 
     public SnmpConnection(String ip, String community)
     {
-        setIp(ip);
-        setCommunity(community);
-
-        initCommunityTarget();
+        this.ip = ip;
+        this.community = community;
+        this.established = false;
     }
 
-    private boolean initCommunityTarget()
+    public boolean initCommunityTarget()
     {
         if (ip != null && community != null)
         {
@@ -52,9 +50,18 @@ public class SnmpConnection
                     snmp = new Snmp(new DefaultUdpTransportMapping());
                     snmp.listen();
 
-                    return true;
+                    established = true;
 
+                    this.snmpObject = new SnmpObject(this);
+                    if(this.snmpObject.init())
+                        return true;
+
+                    else
+                    {
+                        log.error("snmpObject could not be initialized!");
+                    }
                 }
+
                 catch (IOException ioex)
                 {
                     log.error("init failed for target '{}'!\n", targetAddress, ioex);
@@ -67,33 +74,26 @@ public class SnmpConnection
             }
         }
 
+        established = false;
         communityTarget = null;
         return false;
     }
 
-    public String getIp()
+    public boolean update()
     {
-        return ip;
+        if(snmpObject.update())
+        {
+            log.info("Client with ip: '{}' updated successfully", ip);
+            return true;
+        }
+
+        log.warn("Client with ip: '{}' could not be updated", ip);
+        return false;
     }
 
-    public void setIp(String ip)
+    public SnmpObject getSnmpObject()
     {
-        this.ip = ip;
-    }
-
-    public String getCommunity()
-    {
-        return community;
-    }
-
-    public final void setCommunity(String community)
-    {
-        this.community = community;
-    }
-
-    public boolean isReady()
-    {
-        return (communityTarget != null && snmp != null);
+        return snmpObject;
     }
 
     public CommunityTarget getCommunityTarget()
@@ -101,14 +101,24 @@ public class SnmpConnection
         return communityTarget;
     }
 
-    void setCommunityTarget(CommunityTarget communityTarget)
-    {
-        this.communityTarget = communityTarget;
-    }
-
     public Snmp getSnmp()
     {
         return snmp;
+    }
+
+    public String getIp()
+    {
+        return ip;
+    }
+
+    public boolean isEstablished()
+    {
+        return established;
+    }
+
+    public void setEstablished(boolean established)
+    {
+        this.established = established;
     }
 
     @Override

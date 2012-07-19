@@ -5,10 +5,13 @@ import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
 import mr.xuckz.monitoringTool.config.ConfigParameters;
 import mr.xuckz.monitoringTool.config.ConfigParametersLoader;
-import mr.xuckz.monitoringTool.handler.SnmpHandler;
+import mr.xuckz.monitoringTool.handler.SimpleSnmpHandler;
 import mr.xuckz.monitoringTool.handler.SqlHandler;
+import mr.xuckz.monitoringTool.snmp.SnmpHandler;
+import mr.xuckz.monitoringTool.snmp.data.SnmpConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.snmp4j.smi.Variable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,16 +19,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class TestServlet extends HttpServlet
 {
     private final ConfigParameters config;
+    private final SnmpHandler snmpHandler;
 
 	static final Logger log = LoggerFactory.getLogger(TestServlet.class);
 
     public TestServlet()
     {
+        snmpHandler = new SnmpHandler();
         config = ConfigParametersLoader.loadParameters();
+
+        for(String ip : config.getClientIpList())
+        {
+            snmpHandler.addTargetConnection(ip, "public");
+        }
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -84,6 +95,22 @@ public class TestServlet extends HttpServlet
 			response.getWriter().println("<h1>LOG TEST</h1>");
 		}
 
+        else if ("y".equals(request.getParameter("snmptest_simple")))
+        {
+            log.debug("snmptest called");
+
+            response.setContentType("text/html");
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            response.getWriter().println("<h1>SNMP TEST SIMPLE</h1>");
+
+            if(request.getParameter("oid") != null && request.getParameter("ip")!= null)
+                response.getWriter().println("result: " + SimpleSnmpHandler.snmpGet(request.getParameter("ip"), "public", request.getParameter("oid")));
+
+            else
+                response.getWriter().println("oid or ip not found");
+        }
+
         else if ("y".equals(request.getParameter("snmptest")))
         {
             log.debug("snmptest called");
@@ -93,11 +120,23 @@ public class TestServlet extends HttpServlet
 
             response.getWriter().println("<h1>SNMP TEST</h1>");
 
-            if(request.getParameter("oid") != null)
-                response.getWriter().println("result: " + SnmpHandler.snmpGet("192.168.5.123", "public", request.getParameter("oid")));
+            if("y".equals(request.getParameter("update")))
+            {
+                snmpHandler.updateTargetConnections();
+            }
 
-            else
-                response.getWriter().println("oid not found");
+            for(SnmpConnection target : snmpHandler.getListOfTargets())
+            {
+                response.getWriter().println("Client: " + target.getIp() + "<br>Name: " + target.getSnmpObject().getSnmpSystem().getName() + "<br>");
+
+                for(Map.Entry entry : target.getSnmpObject().getSnmpStorage().getListOfStorageDevices().entrySet())
+                {
+                    Variable var = (Variable) entry.getValue();
+                    response.getWriter().println("OID: " + entry.getKey().toString() + "<br>Value: " + var.toString() + "<br>");
+                }
+
+                response.getWriter().println("<br><br>");
+            }
         }
 
 		else if ("y".equals(request.getParameter("logstatus")))

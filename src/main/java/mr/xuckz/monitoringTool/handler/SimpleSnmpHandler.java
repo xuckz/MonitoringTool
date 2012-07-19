@@ -10,9 +10,9 @@ import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
-public class SnmpHandler
+public class SimpleSnmpHandler
 {
-    public SnmpHandler()
+    public SimpleSnmpHandler()
     {
 
     }
