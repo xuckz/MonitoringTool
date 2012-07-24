@@ -9,9 +9,9 @@ import mr.xuckz.monitoringTool.handler.SimpleSnmpHandler;
 import mr.xuckz.monitoringTool.handler.SqlHandler;
 import mr.xuckz.monitoringTool.snmp.SnmpHandler;
 import mr.xuckz.monitoringTool.snmp.data.SnmpConnection;
+import mr.xuckz.monitoringTool.snmp.data.storage.Storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snmp4j.smi.Variable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class TestServlet extends HttpServlet
 {
@@ -129,11 +128,16 @@ public class TestServlet extends HttpServlet
             {
                 response.getWriter().println("Client: " + target.getIp() + "<br>Name: " + target.getSnmpObject().getSnmpSystem().getName() + "<br>");
 
-                for(Map.Entry entry : target.getSnmpObject().getSnmpStorage().getListOfStorageDevices().entrySet())
+/*                for(Map.Entry entry : target.getSnmpObject().getSnmpStorage().getListOfStorageDevices().entrySet())
                 {
                     Variable var = (Variable) entry.getValue();
                     response.getWriter().println("OID: " + entry.getKey().toString() + "<br>Value: " + var.toString() + "<br>");
-                }
+                }*/
+
+				for(Storage storage : target.getSnmpObject().getSnmpStorage().getListOfStorageDevices().values())
+				{
+					response.getWriter().println(storage.toHtmlString() + "<br><br>");
+				}
 
                 response.getWriter().println("<br><br>");
             }

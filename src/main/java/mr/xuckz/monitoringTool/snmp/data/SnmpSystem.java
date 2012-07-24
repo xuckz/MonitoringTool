@@ -12,7 +12,7 @@ public class SnmpSystem implements SnmpObjectType
     private SnmpConnection target;
     static final Logger log = LoggerFactory.getLogger(SnmpSystem.class);
 
-    private static final OID SYSTEM_NAME = new OID("1.3.6.1.2.1.1.5");
+    private static final OID SYSTEM_NAME = new OID("1.3.6.1.2.1.1.5.0");
 
     public SnmpSystem(SnmpConnection target)
     {
@@ -27,7 +27,7 @@ public class SnmpSystem implements SnmpObjectType
         return false;
     }
 
-    private boolean setName()
+	private boolean setName()
     {
         Variable var;
         if((var = SnmpActions.snmpGet(target, SYSTEM_NAME)) != null)
@@ -43,4 +43,9 @@ public class SnmpSystem implements SnmpObjectType
     {
         return name;
     }
+
+	public String toHtmlString()
+	{
+		return "";  //To change body of implemented methods use File | Settings | File Templates.
+	}
 }

@@ -52,7 +52,7 @@ public class SnmpActions
     {
         Variable result = null;
 
-        oid.append(0);
+        //oid.append(0);
         log.debug("get OID {}", oid);
 
         ResponseEvent responseEvent = snmpRequest(target, oid, PDU.GET);

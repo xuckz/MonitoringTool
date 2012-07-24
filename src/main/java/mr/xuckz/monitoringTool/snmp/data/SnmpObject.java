@@ -1,5 +1,6 @@
 package mr.xuckz.monitoringTool.snmp.data;
 
+import mr.xuckz.monitoringTool.snmp.data.storage.SnmpStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,12 @@ public class SnmpObject implements SnmpObjectType
         return false;
     }
 
-    public SnmpSystem getSnmpSystem()
+	public String toHtmlString()
+	{
+		return "";
+	}
+
+	public SnmpSystem getSnmpSystem()
     {
         return snmpSystem;
     }
