@@ -39,6 +39,11 @@ public class Storage
 		return toString;
 	}
 
+	public String toHtmlString()
+	{
+		return toString().replaceAll("\n", "<br>");
+	}
+
 	private String bytesToString(long bytes)
 	{
 		double result = 0.00;
@@ -63,11 +68,6 @@ public class Storage
 			result = (new Double(bytes) / 1024 / 1024 / 1024 * 100);
 			return new Double(new Double(java.lang.Math.round(result)) / 100).toString() + " GB";
 		}
-	}
-
-	public String toHtmlString()
-	{
-		return toString().replaceAll("\n", "<br>");
 	}
 
 	public Integer getIndex()

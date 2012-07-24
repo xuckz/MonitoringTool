@@ -1,6 +1,5 @@
 package mr.xuckz.monitoringTool.snmp.util;
 
-import mr.xuckz.monitoringTool.snmp.data.SnmpConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.PDU;

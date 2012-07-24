@@ -1,6 +1,8 @@
-package mr.xuckz.monitoringTool.snmp.data;
+package mr.xuckz.monitoringTool.snmp.data.system;
 
+import mr.xuckz.monitoringTool.snmp.data.SnmpObjectType;
 import mr.xuckz.monitoringTool.snmp.util.SnmpActions;
+import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.OID;

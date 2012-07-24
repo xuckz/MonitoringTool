@@ -1,6 +1,6 @@
 package mr.xuckz.monitoringTool.snmp.data.storage;
 
-import mr.xuckz.monitoringTool.snmp.data.SnmpConnection;
+import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 import mr.xuckz.monitoringTool.snmp.data.SnmpObjectType;
 import mr.xuckz.monitoringTool.snmp.util.SnmpActions;
 import org.slf4j.Logger;
