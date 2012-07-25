@@ -1,49 +1,91 @@
 package mr.xuckz.monitoringTool.snmp;
 
+import mr.xuckz.monitoringTool.config.ConfigParameters;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
+import mr.xuckz.monitoringTool.snmp.util.SnmpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SnmpHandler
 {
     static final Logger log = LoggerFactory.getLogger(SnmpHandler.class);
-    private List<SnmpConnection> listOfTargets;
+    private Map<SnmpConnection, Boolean> listOfTargets;
+    private final ConfigParameters config;
 
-    public SnmpHandler()
+    public SnmpHandler(ConfigParameters config)
     {
-        listOfTargets = new ArrayList<SnmpConnection>();
+        this.config = config;
+        listOfTargets = new HashMap<SnmpConnection, Boolean>();
+
+        for(String ip : config.getClientIpList())
+        {
+            listOfTargets.put(SnmpConnectionFactory.getPublicSnmpConnection(ip), false);
+        }
     }
 
-    public boolean addTargetConnection(String ip, String community)
+    public void initialize()
     {
-        SnmpConnection snmpConnection = new SnmpConnection(ip, community);
-
-        if(snmpConnection.initCommunityTarget())
+        for(SnmpConnection target : listOfTargets.keySet())
         {
-            listOfTargets.add(snmpConnection);
-            log.info("Target with ip: '{}' and community: '{}' was added successfully!", ip, community);
-            return true;
-        }
+            if(target.initCommunityTarget())
+                listOfTargets.put(target, true);
 
-        else
-        {
-            log.error("Target with ip: '{}' and community: '{}' could not be added!", ip, community);
-            return false;
+            else listOfTargets.put(target, false);
         }
     }
 
     public void updateTargetConnections()
     {
-        for(SnmpConnection target : listOfTargets)
+        for(SnmpConnection target : getActiveTargets())
         {
-            target.update();
+            if(!target.update())
+                listOfTargets.put(target, false);
         }
     }
 
-    public List<SnmpConnection> getListOfTargets()
+    public void reconnect()
+    {
+        for(SnmpConnection target : getInactiveTargets())
+        {
+            if(target.initCommunityTarget())
+                listOfTargets.put(target, true);
+
+            else listOfTargets.put(target, false);
+        }
+    }
+
+    public List<SnmpConnection> getInactiveTargets()
+    {
+        List<SnmpConnection> listOfInactiveConnections = new ArrayList<SnmpConnection>();
+
+        for(Map.Entry entry : listOfTargets.entrySet())
+        {
+            if(!(Boolean) entry.getValue())
+                listOfInactiveConnections.add((SnmpConnection) entry.getKey());
+        }
+
+        return listOfInactiveConnections;
+    }
+
+    public List<SnmpConnection> getActiveTargets()
+    {
+        List<SnmpConnection> listOfActiveConnections = new ArrayList<SnmpConnection>();
+
+        for(Map.Entry entry : listOfTargets.entrySet())
+        {
+            if((Boolean) entry.getValue())
+                listOfActiveConnections.add((SnmpConnection) entry.getKey());
+        }
+
+        return listOfActiveConnections;
+    }
+
+    public Map<SnmpConnection, Boolean> getListOfTargets()
     {
         return listOfTargets;
     }

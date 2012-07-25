@@ -2,9 +2,11 @@ package mr.xuckz.monitoringTool.snmp.data.device.cpu;
 
 public class Cpu
 {
-	String description;
-	Integer index;
-	Integer load;
+    private Integer index;
+	private String description;
+	private Integer load;
+
+	public Cpu(){}
 
 	public Cpu(String description, Integer index, Integer load)
 	{
@@ -12,6 +14,11 @@ public class Cpu
 		this.index = index;
 		this.load = load;
 	}
+
+    public void update(Integer load)
+    {
+        this.load = load;
+    }
 
 	public String toString()
 	{

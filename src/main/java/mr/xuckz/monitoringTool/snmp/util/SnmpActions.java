@@ -19,87 +19,126 @@ import java.util.Map;
 
 public class SnmpActions
 {
-    static final Logger log = LoggerFactory.getLogger(SnmpActions.class);
+	static final Logger log = LoggerFactory.getLogger(SnmpActions.class);
 
-    public static Map<OID, Variable> snmpGetSubTree(SnmpConnection target, OID startOid)
-    {
-        Map<OID, Variable> subTree = new HashMap<OID, Variable>();
+	// is shit
+	public static Map<OID, Variable> snmpGetBulk(SnmpConnection target, OID startOid)
+	{
+		Map<OID, Variable> bulkEntries = new HashMap<OID, Variable>();
 
-        TreeUtils treeUtils = new TreeUtils(target.getSnmp(), new DefaultPDUFactory());
+		ResponseEvent responseEvent = snmpRequest(target, startOid, PDU.GETBULK);
+		if (responseEvent != null)
+		{
+			PDU responsePDU = responseEvent.getResponse();
 
-        List<TreeEvent> listOfTreeEvents = treeUtils.getSubtree(target.getCommunityTarget(), startOid);
-        List<VariableBinding> listOfVariableBindings = new ArrayList<VariableBinding>();
+			if (responsePDU != null)
+			{
+				VariableBinding[] variableBindings = new VariableBinding[responsePDU.getVariableBindings().capacity()];
+				responsePDU.getVariableBindings().toArray(variableBindings);
 
-        for(TreeEvent treeEvent : listOfTreeEvents)
-        {
-            VariableBinding[] variableBindings = treeEvent.getVariableBindings();
+				List<VariableBinding> listOfVariableBindings = new ArrayList<VariableBinding>();
 
-            if(variableBindings != null)
-            {for(int i = 0; i < variableBindings.length; i++)
-                listOfVariableBindings.add(variableBindings[i]);}
-        }
+				if (variableBindings != null)
+				{
+					for (int i = 0; i < variableBindings.length; i++)
+						listOfVariableBindings.add(variableBindings[i]);
+				}
 
-        for(VariableBinding variableBinding : listOfVariableBindings)
-        {
-            subTree.put(variableBinding.getOid(), variableBinding.getVariable());
-        }
+				for (VariableBinding variableBinding : listOfVariableBindings)
+				{
+					bulkEntries.put(variableBinding.getOid(), variableBinding.getVariable());
+				}
+			}
 
-        return subTree;
-    }
+			else
+			{
+				log.warn("bulk request returned no value with OID '{}'!\n", startOid);
+			}
+		}
 
-    public static Variable snmpGet(SnmpConnection target, OID oid)
-    {
-        Variable result = null;
+		return bulkEntries;
+	}
 
-        //oid.append(0);
-        log.debug("get OID {}", oid);
+	public static Map<OID, Variable> snmpGetSubTree(SnmpConnection target, OID startOid)
+	{
+		Map<OID, Variable> subTree = new HashMap<OID, Variable>();
 
-        ResponseEvent responseEvent = snmpRequest(target, oid, PDU.GET);
-        if (responseEvent != null)
-        {
-            PDU responsePDU = responseEvent.getResponse();
+		TreeUtils treeUtils = new TreeUtils(target.getSnmp(), new DefaultPDUFactory());
 
-            if (responsePDU != null)
-            {
-                result = responsePDU.get(0).getVariable();
-                log.debug("read PDU '{}'", result);
-            }
+		List<TreeEvent> listOfTreeEvents = treeUtils.getSubtree(target.getCommunityTarget(), startOid);
+		List<VariableBinding> listOfVariableBindings = new ArrayList<VariableBinding>();
 
-            else
-            {
-                log.warn("request returned no value with OID '{}'!\n", oid);
-            }
-        }
+		for (TreeEvent treeEvent : listOfTreeEvents)
+		{
+			VariableBinding[] variableBindings = treeEvent.getVariableBindings();
 
-        return result;
-    }
+			if (variableBindings != null)
+			{
+				for (int i = 0; i < variableBindings.length; i++)
+					listOfVariableBindings.add(variableBindings[i]);
+			}
+		}
 
-    private static ResponseEvent snmpRequest(SnmpConnection target, OID oid, int cmd)
-    {
-        PDU requestPDU = new PDU();
-        requestPDU.setMaxRepetitions(10);
+		for (VariableBinding variableBinding : listOfVariableBindings)
+		{
+			subTree.put(variableBinding.getOid(), variableBinding.getVariable());
+		}
 
-        requestPDU.add(new VariableBinding(oid));
-        requestPDU.setType(cmd);
+		return subTree;
+	}
 
-        try
-        {
-            ResponseEvent responseEvent = target.getSnmp().send(requestPDU, target.getCommunityTarget());
+	public static Variable snmpGet(SnmpConnection target, OID oid)
+	{
+		Variable result = null;
 
-            if (responseEvent.getResponse() == null)
-            {
-                log.debug("request timed out!");
-            }
+		log.debug("get OID {}", oid);
 
-            return responseEvent;
+		ResponseEvent responseEvent = snmpRequest(target, oid, PDU.GET);
+		if (responseEvent != null)
+		{
+			PDU responsePDU = responseEvent.getResponse();
 
-        }
+			if (responsePDU != null)
+			{
+				result = responsePDU.get(0).getVariable();
+				log.debug("read PDU '{}'", result);
+			}
 
-        catch (IOException ioex)
-        {
-            log.warn("sending snmp msg failed!", ioex);
-        }
+			else
+			{
+				log.warn("request returned no value with OID '{}'!\n", oid);
+			}
+		}
 
-        return null;
-    }
+		return result;
+	}
+
+	private static ResponseEvent snmpRequest(SnmpConnection target, OID oid, int cmd)
+	{
+		PDU requestPDU = new PDU();
+		requestPDU.setMaxRepetitions(10);
+
+		requestPDU.add(new VariableBinding(oid));
+		requestPDU.setType(cmd);
+
+		try
+		{
+			ResponseEvent responseEvent = target.getSnmp().send(requestPDU, target.getCommunityTarget());
+
+			if (responseEvent.getResponse() == null)
+			{
+				log.debug("request timed out!");
+			}
+
+			return responseEvent;
+
+		}
+
+		catch (IOException ioex)
+		{
+			log.warn("sending snmp msg failed!", ioex);
+		}
+
+		return null;
+	}
 }

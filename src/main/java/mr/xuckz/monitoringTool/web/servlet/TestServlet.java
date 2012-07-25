@@ -8,8 +8,7 @@ import mr.xuckz.monitoringTool.config.ConfigParametersLoader;
 import mr.xuckz.monitoringTool.handler.SimpleSnmpHandler;
 import mr.xuckz.monitoringTool.handler.SqlHandler;
 import mr.xuckz.monitoringTool.snmp.SnmpHandler;
-import mr.xuckz.monitoringTool.snmp.data.SnmpConnection;
-import mr.xuckz.monitoringTool.snmp.data.storage.Storage;
+import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +28,8 @@ public class TestServlet extends HttpServlet
 
     public TestServlet()
     {
-        snmpHandler = new SnmpHandler();
         config = ConfigParametersLoader.loadParameters();
-
-        for(String ip : config.getClientIpList())
-        {
-            snmpHandler.addTargetConnection(ip, "public");
-        }
+        snmpHandler = new SnmpHandler(config);
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -124,22 +118,31 @@ public class TestServlet extends HttpServlet
                 snmpHandler.updateTargetConnections();
             }
 
-            for(SnmpConnection target : snmpHandler.getListOfTargets())
+            if("y".equals(request.getParameter("init")))
             {
-                response.getWriter().println("Client: " + target.getIp() + "<br>Name: " + target.getSnmpObject().getSnmpSystem().getName() + "<br>");
+                snmpHandler.initialize();
+            }
 
-/*                for(Map.Entry entry : target.getSnmpObject().getSnmpStorage().getListOfStorageDevices().entrySet())
-                {
-                    Variable var = (Variable) entry.getValue();
-                    response.getWriter().println("OID: " + entry.getKey().toString() + "<br>Value: " + var.toString() + "<br>");
-                }*/
+            if("y".equals(request.getParameter("reconnect")))
+            {
+                snmpHandler.reconnect();
+            }
 
-				for(Storage storage : target.getSnmpObject().getSnmpStorage().getListOfStorageDevices().values())
-				{
-					response.getWriter().println(storage.toHtmlString() + "<br><br>");
-				}
-
+            for(SnmpConnection target : snmpHandler.getActiveTargets())
+            {
+                response.getWriter().println(target.getSnmpObject().getSnmpSystem().toHtmlString());
                 response.getWriter().println("<br><br>");
+                response.getWriter().println(target.getSnmpObject().getSnmpStorage().toHtmlString());
+                response.getWriter().println("<br><br>");
+                response.getWriter().println(target.getSnmpObject().getSnmpDevices().toHtmlString());
+
+                response.getWriter().println("<br><br><br>");
+            }
+
+            for(SnmpConnection target : snmpHandler.getInactiveTargets())
+            {
+                response.getWriter().println(target.getIp() + " IS OFFLINE");
+                response.getWriter().println("<br>");
             }
         }
 

@@ -27,48 +27,11 @@ public class Storage
         this.bytes_used = (long)bytes_used.intValue() * (long)(allocation_units.intValue());
     }
 
-	public String toString()
-	{
-		String toString = "";
-		toString += "Description: " + description + "\n";
-		toString += "Type: " + storageType.toString() + "\n";
-		toString += "Size: " + bytesToString(bytes_size).toString() + "\n";
-		toString += "Used: " + bytesToString(bytes_used).toString() + "\n";
-		toString += "Free: " + bytesToString(bytes_free).toString();
-
-		return toString;
-	}
-
-	public String toHtmlString()
-	{
-		return toString().replaceAll("\n", "<br>");
-	}
-
-	private String bytesToString(long bytes)
-	{
-		double result = 0.00;
-
-		if(bytes <= 1024)
-		    return bytes + " B";
-
-		else if(bytes > 1024 && bytes <= 1048576)
-		{
-			result = (new Double(bytes) / 1024 * 100);
-			return new Double(new Double(java.lang.Math.round(result)) / 100).toString() + " KB";
-		}
-
-		else if(bytes > 1048576 && (bytes <= 1073741824))
-		{
-			result = (new Double(bytes) / 1024 / 1024 * 100);
-			return new Double(new Double(java.lang.Math.round(result)) / 100).toString() + " MB";
-		}
-
-		else
-		{
-			result = (new Double(bytes) / 1024 / 1024 / 1024 * 100);
-			return new Double(new Double(java.lang.Math.round(result)) / 100).toString() + " GB";
-		}
-	}
+    public void update(Integer bytes_used)
+    {
+        this.bytes_free = (bytes_size - (long)(bytes_used.intValue())) * (long)(allocation_units.intValue());
+        this.bytes_used = (long)bytes_used.intValue() * (long)(allocation_units.intValue());
+    }
 
 	public Integer getIndex()
 	{

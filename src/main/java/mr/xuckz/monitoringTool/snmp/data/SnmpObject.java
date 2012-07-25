@@ -1,52 +1,63 @@
 package mr.xuckz.monitoringTool.snmp.data;
 
-import mr.xuckz.monitoringTool.snmp.data.device.SnmpDevice;
+import mr.xuckz.monitoringTool.snmp.data.device.SnmpDevices;
 import mr.xuckz.monitoringTool.snmp.data.storage.SnmpStorage;
 import mr.xuckz.monitoringTool.snmp.data.system.SnmpSystem;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class SnmpObject implements SnmpObjectType
+public class SnmpObject extends SnmpObjectType
 {
-    static final Logger log = LoggerFactory.getLogger(SnmpObject.class);
+    private Long snmpObjectId;
 
-    private SnmpConnection target;
     private SnmpSystem snmpSystem;
     private SnmpStorage snmpStorage;
-	private SnmpDevice snmpDevice;
+	private SnmpDevices snmpDevices;
 
     boolean initialized;
 
     public SnmpObject(SnmpConnection target)
     {
-        this.target = target;
+        super(target);
+
+        snmpStorage = new SnmpStorage(target);
+        snmpSystem = new SnmpSystem(target);
+        snmpDevices = new SnmpDevices(target);
         this.initialized = false;
     }
 
-    public boolean init()
+    public boolean initialize()
     {
-        snmpStorage = new SnmpStorage(target);
-        snmpSystem = new SnmpSystem(target);
-		snmpDevice = new SnmpDevice(target);
+        if(!snmpSystem.initialize())
+            return false;
 
-        return (this.initialized = update());
+        if(!snmpStorage.initialize())
+            return false;
+
+        if(!snmpDevices.initialize())
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "";
     }
 
     public boolean update()
     {
-        if(snmpSystem.update() && snmpStorage.update() && snmpDevice.update())
-        {
-            return true;
-        }
+        if(!snmpSystem.update())
+            return false;
 
-        return false;
+        if(!snmpStorage.update())
+            return false;
+
+        if(!snmpDevices.update())
+            return false;
+
+        return true;
     }
-
-	public String toHtmlString()
-	{
-		return "";
-	}
 
 	public SnmpSystem getSnmpSystem()
     {
@@ -58,8 +69,18 @@ public class SnmpObject implements SnmpObjectType
         return snmpStorage;
     }
 
-	public SnmpDevice getSnmpDevice()
-	{
-		return snmpDevice;
-	}
+    public SnmpDevices getSnmpDevices()
+    {
+        return snmpDevices;
+    }
+
+    public boolean isInitialized()
+    {
+        return initialized;
+    }
+
+    public void setInitialized(boolean initialized)
+    {
+        this.initialized = initialized;
+    }
 }

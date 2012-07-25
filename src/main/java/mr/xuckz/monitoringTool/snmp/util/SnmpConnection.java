@@ -11,16 +11,26 @@ import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.io.IOException;
 
+@Entity
+@Table(name="snmp_connection")
 public class SnmpConnection
 {
     static final Logger log = LoggerFactory.getLogger(SnmpConnection.class);
 
+    @Id
     private String ip;
+
     private String community;
     private CommunityTarget communityTarget;
     private Snmp snmp;
+
+    @OneToOne
     private SnmpObject snmpObject;
 
     private boolean established;
@@ -54,7 +64,8 @@ public class SnmpConnection
                     established = true;
 
                     this.snmpObject = new SnmpObject(this);
-                    if(this.snmpObject.init())
+
+                    if(this.snmpObject.initialize())
                         return true;
 
                     else
