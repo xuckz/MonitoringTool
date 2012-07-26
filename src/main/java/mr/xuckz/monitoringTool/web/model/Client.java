@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class Client
 {
     @Id
+    @Column(name="client_ip")
     private String ip;
 
     private String name;

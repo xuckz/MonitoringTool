@@ -1,5 +1,6 @@
 package mr.xuckz.monitoringTool.snmp.util;
 
+import mr.xuckz.monitoringTool.config.Client;
 import mr.xuckz.monitoringTool.snmp.data.SnmpObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,42 +12,33 @@ import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import java.io.IOException;
 
-@Entity
-@Table(name="snmp_connection")
 public class SnmpConnection
 {
     static final Logger log = LoggerFactory.getLogger(SnmpConnection.class);
 
-    @Id
-    private String ip;
-
+    private Client client;
     private String community;
     private CommunityTarget communityTarget;
     private Snmp snmp;
 
-    @OneToOne
     private SnmpObject snmpObject;
 
     private boolean established;
 
-    public SnmpConnection(String ip, String community)
+    public SnmpConnection(Client client, String community)
     {
-        this.ip = ip;
+        this.client = client;
         this.community = community;
         this.established = false;
     }
 
     public boolean initCommunityTarget()
     {
-        if (ip != null && community != null)
+        if (client.getIp() != null && community != null)
         {
-            Address targetAddress = GenericAddress.parse("udp:" + ip + "/" + SnmpConstants.DEFAULT_COMMAND_RESPONDER_PORT);
+            Address targetAddress = GenericAddress.parse("udp:" + client.getIp() + "/" + SnmpConstants.DEFAULT_COMMAND_RESPONDER_PORT);
             log.info("init SNMP client for '{}'", targetAddress.toString());
 
             if (targetAddress.isValid())
@@ -57,6 +49,10 @@ public class SnmpConnection
                     communityTarget.setCommunity(new OctetString(community));
                     communityTarget.setAddress(targetAddress);
                     communityTarget.setVersion(SnmpConstants.version2c);
+
+                    communityTarget.setTimeout(1500);
+                    communityTarget.setRetries(2);
+                    communityTarget.setMaxSizeRequestPDU(65535);
 
                     snmp = new Snmp(new DefaultUdpTransportMapping());
                     snmp.listen();
@@ -95,11 +91,11 @@ public class SnmpConnection
     {
         if(snmpObject.update())
         {
-            log.info("Client with ip: '{}' updated successfully", ip);
+            log.info("Client with ip: '{}' updated successfully", client.getIp());
             return true;
         }
 
-        log.warn("Client with ip: '{}' could not be updated", ip);
+        log.warn("Client with ip: '{}' could not be updated", client.getIp());
         return false;
     }
 
@@ -118,9 +114,9 @@ public class SnmpConnection
         return snmp;
     }
 
-    public String getIp()
+    public Client getClient()
     {
-        return ip;
+        return client;
     }
 
     public boolean isEstablished()
@@ -137,7 +133,7 @@ public class SnmpConnection
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("Ip: '").append(ip).append("', ");
+        sb.append("Ip: '").append(client.getIp()).append("', ");
         sb.append("Community: '").append(community).append("'");
 
         return sb.toString();

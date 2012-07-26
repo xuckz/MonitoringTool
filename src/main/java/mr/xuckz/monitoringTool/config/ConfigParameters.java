@@ -17,7 +17,7 @@ public class ConfigParameters
     private String USER;
     private String PASSWORD;
 
-    private List<String> clientIpList;
+    private List<Client> clientList;
 
     public ConfigParameters(Properties properties)
     {
@@ -27,12 +27,22 @@ public class ConfigParameters
         this.PASSWORD = properties.getProperty("db.password");
         this.USER = properties.getProperty("db.user");
 
-        clientIpList = new ArrayList<String>();
+        clientList = new ArrayList<Client>();
         int count = 1;
-        while(properties.getProperty("client.ip." + Integer.toString(count)) != null)
+        while(properties.getProperty(Integer.toString(count) + ".client.ip") != null)
         {
-            clientIpList.add(properties.getProperty("client.ip." + Integer.toString(count)));
-            log.debug("Client with ip: '{}' added.", properties.getProperty("client.ip." + Integer.toString(count)));
+            List<String> interfaceList = new ArrayList<String>();
+
+            int iCount = 1;
+            while(properties.getProperty(Integer.toString(count) + ".client.interface." + Integer.toString(iCount)) != null)
+            {
+                interfaceList.add(properties.getProperty(Integer.toString(count) + ".client.interface." + Integer.toString(iCount)));
+                iCount++;
+            }
+
+            clientList.add(ClientFactory.getClient(properties.getProperty(Integer.toString(count) + ".client.ip"), interfaceList));
+
+            log.info("Client added:\n" + clientList.get(count - 1).toString());
             count++;
         }
     }
@@ -62,8 +72,8 @@ public class ConfigParameters
         return PASSWORD;
     }
 
-    public List<String> getClientIpList()
+    public List<Client> getClientList()
     {
-        return clientIpList;
+        return clientList;
     }
 }

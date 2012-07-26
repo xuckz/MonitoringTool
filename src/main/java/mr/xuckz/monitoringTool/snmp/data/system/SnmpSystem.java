@@ -14,7 +14,7 @@ public class SnmpSystem extends SnmpObjectType
     static final Logger log = LoggerFactory.getLogger(SnmpSystem.class);
 
     private static final OID SYSTEM_DESCRIPTION = new OID("1.3.6.1.2.1.1.1.0");
-    private static final OID SYSTEM_UPTIME = new OID("1.3.6.1.2.1.1.3.0");
+    private static final OID SYSTEM_UPTIME = new OID("1.3.6.1.2.1.25.1.1.0");
     private static final OID SYSTEM_CONTACT = new OID("1.3.6.1.2.1.1.4.0");
     private static final OID SYSTEM_NAME = new OID("1.3.6.1.2.1.1.5.0");
     private static final OID SYSTEM_LOCATION = new OID("1.3.6.1.2.1.1.6.0");
@@ -39,6 +39,7 @@ public class SnmpSystem extends SnmpObjectType
         Variable system_num_var = SnmpActions.snmpGet(target, SYSTEM_NUM_PROCESSES);
         Variable system_date_var = SnmpActions.snmpGet(target, SYSTEM_DATE);
 
+
         if (system_desc_var != null &&
                 system_location_var != null &&
                 system_contact_var != null &&
@@ -47,15 +48,15 @@ public class SnmpSystem extends SnmpObjectType
                 system_num_var != null &&
                 system_date_var != null)
         {
-            system = SystemFactory.getSystem(system_desc_var.toString(), target.getIp(), system_location_var.toString(), system_contact_var.toString(),
-                    system_name_var.toString(), system_uptime_var.toString(), system_num_var.toInt(), system_date_var.toString());
+            system = SystemFactory.getSystem(system_desc_var.toString(), target.getClient().getIp(), system_location_var.toString(), system_contact_var.toString(),
+                    system_name_var.toString(), system_uptime_var.toString(), system_num_var.toInt(), octetStringToDateString(system_date_var));
 
-            log.info("SnmpSystem for ip: '" + target.getIp() + "' initialized!");
+            log.info("SnmpSystem for ip: '" + target.getClient().getIp() + "' initialized!");
             return true;
         }
 
 
-        log.error("SnmpSystem for ip: '" + target.getIp() + "' could not be initialized!");
+        log.error("SnmpSystem for ip: '" + target.getClient().getIp() + "' could not be initialized!");
         return false;
     }
 
@@ -69,11 +70,11 @@ public class SnmpSystem extends SnmpObjectType
                 system_num_var != null &&
                 system_date_var != null)
         {
-            system.update(system_uptime_var.toString(), system_num_var.toInt(), system_date_var.toString());
+            system.update(system_uptime_var.toString(), system_num_var.toInt(), octetStringToDateString(system_date_var));
             return true;
         }
 
-        log.error("SnmpSystem for ip: '" + target.getIp() + "' could not be updated!");
+        log.error("SnmpSystem for ip: '" + target.getClient().getIp() + "' could not be updated!");
         return false;
     }
 

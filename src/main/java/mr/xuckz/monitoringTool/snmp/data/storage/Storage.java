@@ -1,13 +1,23 @@
 package mr.xuckz.monitoringTool.snmp.data.storage;
 
+import mr.xuckz.monitoringTool.config.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
+
+@Entity
+@NamedQueries({
+        @NamedQuery(name = "Status.byClient",
+                query = "from Status s where s.client = :client")
+})
 public class Storage
 {
 	static final Logger log = LoggerFactory.getLogger(Storage.class);
 
+    @Id
 	private Integer index;
+
     private String description;
     private StorageType storageType;
 	private Integer allocation_units;
@@ -15,8 +25,12 @@ public class Storage
     private long bytes_free;
     private long bytes_used;
 
-    public Storage(Integer index, String description, StorageType storageType, Integer allocation_units, Integer bytes_size, Integer bytes_used)
+    @ManyToOne(cascade=CascadeType.ALL)
+    private Client client;
+
+    public Storage(Client client, Integer index, String description, StorageType storageType, Integer allocation_units, Integer bytes_size, Integer bytes_used)
     {
+        this.client = client;
 		this.index = index;
         this.description = description;
         this.storageType = storageType;
@@ -102,4 +116,14 @@ public class Storage
 	{
 		this.bytes_used = bytes_used;
 	}
+
+    public Client getClient()
+    {
+        return client;
+    }
+
+    public void setClient(Client client)
+    {
+        this.client = client;
+    }
 }

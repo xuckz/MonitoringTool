@@ -7,8 +7,6 @@ import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 
 public class SnmpObject extends SnmpObjectType
 {
-    private Long snmpObjectId;
-
     private SnmpSystem snmpSystem;
     private SnmpStorage snmpStorage;
 	private SnmpDevices snmpDevices;

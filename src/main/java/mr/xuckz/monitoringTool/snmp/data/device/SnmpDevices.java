@@ -63,8 +63,17 @@ public class SnmpDevices extends SnmpObjectType
 		List<Integer> listOfNetworkIndices = new ArrayList<Integer>();
 		for (Variable var : SnmpActions.snmpGetSubTree(target, NETWORK_IF_INDEX).values())
 		{
-			log.debug(target.getIp() + " NETWORK INDEX " + var.toInt());
-			listOfNetworkIndices.add(var.toInt());
+            Integer index = var.toInt();
+
+            OID interface_desc_tmp = new OID(NETWORK_IF_DESCRIPTION);
+            interface_desc_tmp.append(index);
+
+            Variable interface_description_var = SnmpActions.snmpGet(target, interface_desc_tmp);
+
+            if(target.getClient().getNetworkInterfaces().contains(varToString(interface_description_var)))
+            {
+			    listOfNetworkIndices.add(index);
+            }
 		}
 
 		listOfCpus = new HashMap<Integer, Cpu>();
@@ -85,7 +94,7 @@ public class SnmpDevices extends SnmpObjectType
 
 			else
 			{
-				log.error("SnmpDevices(CPU) for ip: '" + target.getIp() + "' could not be initialized!");
+				log.error("SnmpDevices(CPU) for ip: '" + target.getClient().getIp() + "' could not be initialized!");
 				return false;
 			}
 		}
@@ -109,17 +118,21 @@ public class SnmpDevices extends SnmpObjectType
 
 			if (interface_in_octets_var != null && interface_out_octets_var != null && interface_description_var != null && interface_type_var != null)
 			{
-				listOfNetwork.put(index, NetworkFactory.getNetwork(interface_description_var.toString(), interface_type_var.toString(), index, interface_in_octets_var.toLong(), interface_out_octets_var.toLong()));
+				listOfNetwork.put(index, NetworkFactory.getNetwork(varToString(interface_description_var),
+                        varToString(interface_type_var),
+                        index,
+                        interface_in_octets_var.toLong(),
+                        interface_out_octets_var.toLong()));
 			}
 
 			else
 			{
-				log.error("SnmpDevices(Network) for ip: '" + target.getIp() + "' could not be initialized!");
+				log.error("SnmpDevices(Network) for ip: '" + target.getClient().getIp() + "' could not be initialized!");
 				return false;
 			}
 		}
 
-		log.info("SnmpDevices for ip: '"+target.getIp()+"' initialized!");
+		log.info("SnmpDevices for ip: '"+target.getClient().getIp()+"' initialized!");
 		return true;
 	}
 
@@ -148,7 +161,7 @@ public class SnmpDevices extends SnmpObjectType
 
 			else
 			{
-				log.error("SnmpDevices(Network) for ip: '" + target.getIp() + "' could not be updated!");
+				log.error("SnmpDevices(Network) for ip: '" + target.getClient().getIp() + "' could not be updated!");
 				return false;
 			}
 		}
@@ -160,6 +173,7 @@ public class SnmpDevices extends SnmpObjectType
 	{
 		for (Integer index : listOfCpus.keySet())
 		{
+
 			OID processor_load_tmp = new OID(PROCESSOR_LOAD);
 			processor_load_tmp.append(index);
 
@@ -172,7 +186,7 @@ public class SnmpDevices extends SnmpObjectType
 
 			else
 			{
-				log.error("SnmpDevices(CPU) for ip: '" + target.getIp() + "' could not be updated!");
+				log.error("SnmpDevices(CPU) for ip: '" + target.getClient().getIp() + "' could not be updated!");
 				return false;
 			}
 		}

@@ -141,7 +141,7 @@ public class TestServlet extends HttpServlet
 
             for(SnmpConnection target : snmpHandler.getInactiveTargets())
             {
-                response.getWriter().println(target.getIp() + " IS OFFLINE");
+                response.getWriter().println(target.getClient().getIp() + " IS OFFLINE");
                 response.getWriter().println("<br>");
             }
         }

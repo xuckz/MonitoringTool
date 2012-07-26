@@ -1,5 +1,6 @@
 package mr.xuckz.monitoringTool.snmp;
 
+import mr.xuckz.monitoringTool.config.Client;
 import mr.xuckz.monitoringTool.config.ConfigParameters;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnectionFactory;
@@ -22,9 +23,9 @@ public class SnmpHandler
         this.config = config;
         listOfTargets = new HashMap<SnmpConnection, Boolean>();
 
-        for(String ip : config.getClientIpList())
+        for(Client client : config.getClientList())
         {
-            listOfTargets.put(SnmpConnectionFactory.getPublicSnmpConnection(ip), false);
+            listOfTargets.put(SnmpConnectionFactory.getPublicSnmpConnection(client), false);
         }
     }
 

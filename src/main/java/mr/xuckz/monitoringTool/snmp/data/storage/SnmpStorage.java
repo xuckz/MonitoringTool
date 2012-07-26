@@ -36,6 +36,8 @@ public class SnmpStorage extends SnmpObjectType
             listOfIndices.add(var.toInt());
         }
 
+        log.debug("STORAGE LIST SIZE: " + listOfIndices.size());
+
         listOfStorageDevices = new HashMap<Integer, Storage>();
         for (Integer index : listOfIndices)
         {
@@ -62,7 +64,8 @@ public class SnmpStorage extends SnmpObjectType
                     storage_bytes_size_var != null &&
                     storage_bytes_used_var != null)
             {
-                listOfStorageDevices.put(index, StorageFactory.getStorage(index,
+                listOfStorageDevices.put(index, StorageFactory.getStorage(target.getClient(),
+                        index,
                         storage_desc_var.toString(),
                         storage_type_var.toSubIndex(true),
                         storage_allocation_units_var.toInt(),
@@ -72,12 +75,12 @@ public class SnmpStorage extends SnmpObjectType
 
             else
             {
-                log.error("SnmpStorage for ip: '" + target.getIp() + "' could not be initialized!");
+                log.error("SnmpStorage for ip: '" + target.getClient().getIp() + "' could not be initialized!");
                 return false;
             }
         }
 
-        log.info("SnmpStorage for ip: '" + target.getIp() + "' initialized!");
+        log.info("SnmpStorage for ip: '" + target.getClient().getIp() + "' initialized!");
         return true;
     }
 
@@ -97,7 +100,7 @@ public class SnmpStorage extends SnmpObjectType
 
             else
             {
-                log.error("SnmpStorage for ip: '" + target.getIp() + "' could not be updated!");
+                log.error("SnmpStorage for ip: '" + target.getClient().getIp() + "' could not be updated!");
                 return false;
             }
         }
