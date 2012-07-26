@@ -1,6 +1,6 @@
 package mr.xuckz.monitoringTool.snmp.data.storage;
 
-import mr.xuckz.monitoringTool.snmp.data.SnmpObjectType;
+import mr.xuckz.monitoringTool.snmp.data.SnmpDataManager;
 import mr.xuckz.monitoringTool.snmp.util.SnmpActions;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 import org.snmp4j.smi.OID;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SnmpStorage extends SnmpObjectType
+public class SnmpStorageManager extends SnmpDataManager
 {
     private static final OID STORAGE_TOP_LEVEL = new OID("1.3.6.1.2.1.25.2");
     private static final OID STORAGE_INDEX = new OID("1.3.6.1.2.1.25.2.3.1.1");
@@ -23,7 +23,7 @@ public class SnmpStorage extends SnmpObjectType
 
     private Map<Integer, Storage> listOfStorageDevices;
 
-    public SnmpStorage(SnmpConnection target)
+    public SnmpStorageManager(SnmpConnection target)
     {
         super(target);
     }
@@ -64,7 +64,7 @@ public class SnmpStorage extends SnmpObjectType
                     storage_bytes_size_var != null &&
                     storage_bytes_used_var != null)
             {
-                listOfStorageDevices.put(index, StorageFactory.getStorage(target.getClient(),
+                listOfStorageDevices.put(index, StorageFactory.getStorage(
                         index,
                         storage_desc_var.toString(),
                         storage_type_var.toSubIndex(true),
@@ -75,12 +75,12 @@ public class SnmpStorage extends SnmpObjectType
 
             else
             {
-                log.error("SnmpStorage for ip: '" + target.getClient().getIp() + "' could not be initialized!");
+                log.error("SnmpStorageManager for ip: '" + target.getClient().getIp() + "' could not be initialized!");
                 return false;
             }
         }
 
-        log.info("SnmpStorage for ip: '" + target.getClient().getIp() + "' initialized!");
+        log.info("SnmpStorageManager for ip: '" + target.getClient().getIp() + "' initialized!");
         return true;
     }
 
@@ -100,7 +100,7 @@ public class SnmpStorage extends SnmpObjectType
 
             else
             {
-                log.error("SnmpStorage for ip: '" + target.getClient().getIp() + "' could not be updated!");
+                log.error("SnmpStorageManager for ip: '" + target.getClient().getIp() + "' could not be updated!");
                 return false;
             }
         }
@@ -116,24 +116,17 @@ public class SnmpStorage extends SnmpObjectType
     @Override
     public String toString()
     {
-        String result = "";
+		StringBuilder sb = new StringBuilder();
 
         for (Storage storage : listOfStorageDevices.values())
         {
-            result += "Description: " + storage.getDescription() + "\n";
-            result += "Type: " + storage.getStorageType().toString() + "\n";
-            result += "Size: " + bytesToString(storage.getBytes_size()) + "\n";
-            result += "Used: " + bytesToString(storage.getBytes_used()) + "\n";
-            result += "Free: " + bytesToString(storage.getBytes_free()) + "\n\n";
+			sb.append(storage.toString());
+			sb.append("\n\n");
         }
 
-        if (result.length() > 2)
-        {
-            StringBuilder b = new StringBuilder(result);
-            b.substring(0, result.length() - 2);
-            return b.toString();
-        }
+		if(sb.length() > 2)
+			sb.delete(sb.length() - 2, sb.length() - 1);
 
-        return result;
+		return sb.toString();
     }
 }

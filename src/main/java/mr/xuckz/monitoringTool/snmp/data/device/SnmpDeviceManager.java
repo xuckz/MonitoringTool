@@ -1,6 +1,6 @@
 package mr.xuckz.monitoringTool.snmp.data.device;
 
-import mr.xuckz.monitoringTool.snmp.data.SnmpObjectType;
+import mr.xuckz.monitoringTool.snmp.data.SnmpDataManager;
 import mr.xuckz.monitoringTool.snmp.data.device.cpu.Cpu;
 import mr.xuckz.monitoringTool.snmp.data.device.cpu.CpuFactory;
 import mr.xuckz.monitoringTool.snmp.data.device.network.Network;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SnmpDevices extends SnmpObjectType
+public class SnmpDeviceManager extends SnmpDataManager
 {
 	private static final OID DEVICE_INDEX       = new OID("1.3.6.1.2.1.25.3.2.1.1");
 	private static final OID DEVICE_DESCRIPTION = new OID("1.3.6.1.2.1.25.3.2.1.3");
@@ -35,12 +35,7 @@ public class SnmpDevices extends SnmpObjectType
 	private Map<Integer, Cpu> listOfCpus;
 	private Map<Integer, Network> listOfNetwork;
 
-	/*
-	HEX FIX NEEDED
-		http://www.mail-archive.com/snmp4j@agentpp.org/msg00349.html
-		 */
-
-	public SnmpDevices(SnmpConnection target)
+	public SnmpDeviceManager(SnmpConnection target)
 	{
 		super(target);
 	}
@@ -94,7 +89,7 @@ public class SnmpDevices extends SnmpObjectType
 
 			else
 			{
-				log.error("SnmpDevices(CPU) for ip: '" + target.getClient().getIp() + "' could not be initialized!");
+				log.error("SnmpDeviceManager(CPU) for ip: '" + target.getClient().getIp() + "' could not be initialized!");
 				return false;
 			}
 		}
@@ -127,12 +122,12 @@ public class SnmpDevices extends SnmpObjectType
 
 			else
 			{
-				log.error("SnmpDevices(Network) for ip: '" + target.getClient().getIp() + "' could not be initialized!");
+				log.error("SnmpDeviceManager(Network) for ip: '" + target.getClient().getIp() + "' could not be initialized!");
 				return false;
 			}
 		}
 
-		log.info("SnmpDevices for ip: '"+target.getClient().getIp()+"' initialized!");
+		log.info("SnmpDeviceManager for ip: '"+target.getClient().getIp()+"' initialized!");
 		return true;
 	}
 
@@ -161,7 +156,7 @@ public class SnmpDevices extends SnmpObjectType
 
 			else
 			{
-				log.error("SnmpDevices(Network) for ip: '" + target.getClient().getIp() + "' could not be updated!");
+				log.error("SnmpDeviceManager(Network) for ip: '" + target.getClient().getIp() + "' could not be updated!");
 				return false;
 			}
 		}
@@ -186,7 +181,7 @@ public class SnmpDevices extends SnmpObjectType
 
 			else
 			{
-				log.error("SnmpDevices(CPU) for ip: '" + target.getClient().getIp() + "' could not be updated!");
+				log.error("SnmpDeviceManager(CPU) for ip: '" + target.getClient().getIp() + "' could not be updated!");
 				return false;
 			}
 		}
@@ -207,31 +202,25 @@ public class SnmpDevices extends SnmpObjectType
 	@Override
 	public String toString()
 	{
-		String result = "";
+		StringBuilder sb = new StringBuilder();
 
 		for (Cpu cpu : listOfCpus.values())
 		{
-			result += "CPU #" + cpu.getIndex() + ": " + cpu.getDescription() + "\n";
-			result += "CPU #" + cpu.getIndex() + " load: " + cpu.getLoad() + "\n\n";
+			sb.append(cpu.toString());
+			sb.append("\n\n");
 		}
+
+		sb.append("\n");
 
 		for (Network net : listOfNetwork.values())
 		{
-			result += "Interface #" + net.getIndex() + ": " + net.getDescription() + "\n";
-			result += "Interface #" + net.getIndex() + " type: " + net.getType() + "\n";
-			result += "Interface #" + net.getIndex() + " total in: " + bytesToString(net.getBytes_in()) + "\n";
-			result += "Interface #" + net.getIndex() + " total out: " + bytesToString(net.getBytes_out()) + "\n";
-			result += "Interface #" + net.getIndex() + " bytes in per second: " + bytesToString(net.getDelta_in()) + "\n";
-			result += "Interface #" + net.getIndex() + " bytes out per second: " + bytesToString(net.getDelta_out()) + "\n\n";
+			sb.append(net.toString());
+			sb.append("\n\n");
 		}
 
-		if (result.length() > 2)
-		{
-			StringBuilder b = new StringBuilder(result);
-			b.substring(0, result.length() - 2);
-			return b.toString();
-		}
+		if(sb.length() > 2)
+			sb.delete(sb.length() - 2, sb.length() - 1);
 
-		return result;
+		return sb.toString();
 	}
 }

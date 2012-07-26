@@ -1,27 +1,12 @@
 package mr.xuckz.monitoringTool.web.model;
 
-import javax.persistence.*;
 import java.util.Date;
-
-@Entity
-@NamedQueries({
-        @NamedQuery(name = "Status.byClient",
-                query = "from Status s where s.client = :client")
-})
 
 public class Status
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne(cascade=CascadeType.ALL)
     private Client client;
-
-    @OneToOne(mappedBy = "status", cascade = CascadeType.ALL)
     private Performance performance;
-
-    @OneToOne(mappedBy = "status", cascade = CascadeType.ALL)
     private FileSystem fileSystem;
 
     private Date date;

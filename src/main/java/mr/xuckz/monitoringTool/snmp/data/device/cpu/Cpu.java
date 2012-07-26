@@ -1,12 +1,11 @@
 package mr.xuckz.monitoringTool.snmp.data.device.cpu;
 
-public class Cpu
+import mr.xuckz.monitoringTool.snmp.data.SnmpDataObject;
+
+public class Cpu extends SnmpDataObject
 {
-    private Integer index;
 	private String description;
 	private Integer load;
-
-	public Cpu(){}
 
 	public Cpu(String description, Integer index, Integer load)
 	{
@@ -15,23 +14,19 @@ public class Cpu
 		this.load = load;
 	}
 
-    public void update(Integer load)
-    {
-        this.load = load;
-    }
+	public void update(Integer load)
+	{
+		this.load = load;
+	}
 
 	public String toString()
 	{
-		String toString = "";
-		toString += "Description: " + description + "\n";
-		toString += "Load: " + load.toString() + " %";
+		StringBuilder sb = new StringBuilder();
 
-		return toString;
-	}
+		sb.append("CPU #" + this.index + " Description: " + description + "\n");
+		sb.append("CPU #" + this.index + "Load: " + load.toString() + " %");
 
-	public String toHtmlString()
-	{
-		return toString().replaceAll("\n", "<br>");
+		return sb.toString();
 	}
 
 	public String getDescription()
@@ -39,28 +34,8 @@ public class Cpu
 		return description;
 	}
 
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
-	public Integer getIndex()
-	{
-		return index;
-	}
-
-	public void setIndex(Integer index)
-	{
-		this.index = index;
-	}
-
 	public Integer getLoad()
 	{
 		return load;
-	}
-
-	public void setLoad(Integer load)
-	{
-		this.load = load;
 	}
 }

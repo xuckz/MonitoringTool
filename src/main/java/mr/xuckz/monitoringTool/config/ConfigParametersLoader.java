@@ -9,7 +9,6 @@ import java.util.Properties;
 public class ConfigParametersLoader
 {
     private static final String PROPERTIES_FILENAME = "monitoringTool.properties";
-
     private static final Logger log = LoggerFactory.getLogger(ConfigParametersLoader.class);
 
     private ConfigParametersLoader()

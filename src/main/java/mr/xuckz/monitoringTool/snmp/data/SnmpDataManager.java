@@ -7,13 +7,13 @@ import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.SMIConstants;
 import org.snmp4j.smi.Variable;
 
-public abstract class SnmpObjectType
+public abstract class SnmpDataManager
 {
-    protected static final Logger log = LoggerFactory.getLogger(SnmpObjectType.class);
+    protected Logger log = LoggerFactory.getLogger(this.getClass());
 
     protected SnmpConnection target;
 
-    public SnmpObjectType(SnmpConnection target)
+    public SnmpDataManager(SnmpConnection target)
     {
         this.target = target;
     }

@@ -1,20 +1,10 @@
 package mr.xuckz.monitoringTool.web.model;
 
-import javax.persistence.*;
-
-@Entity
 public class FileSystem
 {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String free;
     private String used;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 
     public FileSystem()

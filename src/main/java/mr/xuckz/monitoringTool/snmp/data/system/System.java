@@ -1,8 +1,9 @@
 package mr.xuckz.monitoringTool.snmp.data.system;
 
-public class System
+import mr.xuckz.monitoringTool.snmp.data.SnmpDataObject;
+
+public class System extends SnmpDataObject
 {
-    private Integer index;
     private String ip;
     private String description;
     private String location;
@@ -32,24 +33,25 @@ public class System
         this.date = date;
     }
 
-    public Integer getIndex()
-    {
-        return index;
-    }
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
 
-    public void setIndex(Integer index)
-    {
-        this.index = index;
-    }
+		sb.append("System #" + this.index + "IP: " + this.ip + "\n");
+		sb.append("System #" + this.index + "Description: " + this.description + "\n");
+		sb.append("System #" + this.index + "Location: " + this.location + "\n");
+		sb.append("System #" + this.index + "Contact: " + this.contact + "\n");
+		sb.append("System #" + this.index + "System Name: " + this.sys_name + "\n");
+		sb.append("System #" + this.index + "Uptime: " + this.uptime + "\n");
+		sb.append("System #" + this.index + "Date: " + this.date + "\n");
+		sb.append("System #" + this.index + "Processes: " + this.num_processes);
+
+		return sb.toString();
+	}
 
     public String getDescription()
     {
         return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
     }
 
     public String getLocation()
@@ -57,19 +59,9 @@ public class System
         return location;
     }
 
-    public void setLocation(String location)
-    {
-        this.location = location;
-    }
-
     public String getContact()
     {
         return contact;
-    }
-
-    public void setContact(String contact)
-    {
-        this.contact = contact;
     }
 
     public String getSys_name()
@@ -77,19 +69,9 @@ public class System
         return sys_name;
     }
 
-    public void setSys_name(String sys_name)
-    {
-        this.sys_name = sys_name;
-    }
-
     public String getUptime()
     {
         return uptime;
-    }
-
-    public void setUptime(String uptime)
-    {
-        this.uptime = uptime;
     }
 
     public Integer getNum_processes()
@@ -97,28 +79,13 @@ public class System
         return num_processes;
     }
 
-    public void setNum_processes(Integer num_processes)
-    {
-        this.num_processes = num_processes;
-    }
-
     public String getDate()
     {
         return date;
     }
 
-    public void setDate(String date)
-    {
-        this.date = date;
-    }
-
     public String getIp()
     {
         return ip;
-    }
-
-    public void setIp(String ip)
-    {
-        this.ip = ip;
     }
 }
