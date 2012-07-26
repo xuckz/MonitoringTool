@@ -1,7 +1,7 @@
 package mr.xuckz.monitoringTool.snmp.util;
 
 import mr.xuckz.monitoringTool.config.Client;
-import mr.xuckz.monitoringTool.snmp.data.SnmpManagingStatus;
+import mr.xuckz.monitoringTool.snmp.SnmpStatusManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.CommunityTarget;
@@ -23,7 +23,7 @@ public class SnmpConnection
     private CommunityTarget communityTarget;
     private Snmp snmp;
 
-    private SnmpManagingStatus snmpStatus;
+    private SnmpStatusManager snmpStatusManager;
 
     private boolean established;
 
@@ -59,14 +59,14 @@ public class SnmpConnection
 
                     established = true;
 
-                    this.snmpStatus = new SnmpManagingStatus(this);
+                    this.snmpStatusManager = new SnmpStatusManager(this);
 
-                    if(this.snmpStatus.initialize())
+                    if(this.snmpStatusManager.initialize())
                         return true;
 
                     else
                     {
-                        log.error("snmpStatus could not be initialized!");
+                        log.error("snmpStatusManager could not be initialized!");
                     }
                 }
 
@@ -89,7 +89,7 @@ public class SnmpConnection
 
     public boolean update()
     {
-        if(snmpStatus.update())
+        if(snmpStatusManager.update())
         {
             log.info("Client with ip: '{}' updated successfully", client.getIp());
             return true;
@@ -99,9 +99,9 @@ public class SnmpConnection
         return false;
     }
 
-    public SnmpManagingStatus getSnmpStatus()
+    public SnmpStatusManager getSnmpStatusManager()
     {
-        return snmpStatus;
+        return snmpStatusManager;
     }
 
     public CommunityTarget getCommunityTarget()

@@ -5,13 +5,15 @@ import java.util.List;
 public class Client
 {
     String ip;
+	ClientType type;
     List<String> networkInterfaces;
 
     public Client(){}
 
-    public Client(String ip, List<String> networkInterfaces)
+    public Client(String ip, ClientType type, List<String> networkInterfaces)
     {
         this.ip = ip;
+		this.type = type;
         this.networkInterfaces = networkInterfaces;
     }
 
@@ -25,11 +27,17 @@ public class Client
         return ip;
     }
 
-    @Override
+	public ClientType getType()
+	{
+		return type;
+	}
+
+	@Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
         sb.append("IP: " + ip + "\n");
+		sb.append("Type: " + type + "\n");
 
         for(String iface : networkInterfaces)
         {
@@ -40,4 +48,9 @@ public class Client
 
         return sb.toString();
     }
+
+	public String toHtmlString()
+	{
+		return toString().replaceAll("\n", "<br>");
+	}
 }

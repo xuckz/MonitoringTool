@@ -37,14 +37,14 @@ public class System extends SnmpDataObject
 	{
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("System #" + this.index + "IP: " + this.ip + "\n");
-		sb.append("System #" + this.index + "Description: " + this.description + "\n");
-		sb.append("System #" + this.index + "Location: " + this.location + "\n");
-		sb.append("System #" + this.index + "Contact: " + this.contact + "\n");
-		sb.append("System #" + this.index + "System Name: " + this.sys_name + "\n");
-		sb.append("System #" + this.index + "Uptime: " + this.uptime + "\n");
-		sb.append("System #" + this.index + "Date: " + this.date + "\n");
-		sb.append("System #" + this.index + "Processes: " + this.num_processes);
+		sb.append("System #" + this.index + " IP: " + this.ip + "\n");
+		sb.append("System #" + this.index + " Description: " + this.description + "\n");
+		sb.append("System #" + this.index + " Location: " + this.location + "\n");
+		sb.append("System #" + this.index + " Contact: " + this.contact + "\n");
+		sb.append("System #" + this.index + " System Name: " + this.sys_name + "\n");
+		sb.append("System #" + this.index + " Uptime: " + this.uptime + "\n");
+		sb.append("System #" + this.index + " Date: " + this.date + "\n");
+		sb.append("System #" + this.index + " Processes: " + this.num_processes);
 
 		return sb.toString();
 	}

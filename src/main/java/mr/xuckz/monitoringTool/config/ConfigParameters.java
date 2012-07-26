@@ -40,7 +40,9 @@ public class ConfigParameters
                 iCount++;
             }
 
-            clientList.add(ClientFactory.getClient(properties.getProperty(Integer.toString(count) + ".client.ip"), interfaceList));
+            clientList.add(ClientFactory.getClient(properties.getProperty(Integer.toString(count) + ".client.ip"),
+					ClientType.get(properties.getProperty(Integer.toString(count) + ".client.type")) ,
+					interfaceList));
 
             log.info("Client added:\n" + clientList.get(count - 1).toString());
             count++;

@@ -1,6 +1,6 @@
 package mr.xuckz.monitoringTool.persist;
 
-import mr.xuckz.monitoringTool.snmp.data.SnmpManagingStatus;
+import mr.xuckz.monitoringTool.snmp.SnmpStatusManager;
 import mr.xuckz.monitoringTool.web.model.Status;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -15,8 +15,8 @@ public class SnmpObjectDAO extends HibernateDaoSupport
         getHibernateTemplate().save(status);
     }
 
-    public SnmpManagingStatus load(Integer id)
+    public SnmpStatusManager load(Integer id)
     {
-        return (SnmpManagingStatus) getHibernateTemplate().load(SnmpManagingStatus.class, id);
+        return (SnmpStatusManager) getHibernateTemplate().load(SnmpStatusManager.class, id);
     }
 }

@@ -4,8 +4,6 @@ import mr.xuckz.monitoringTool.config.Client;
 import mr.xuckz.monitoringTool.config.ConfigParameters;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +12,6 @@ import java.util.Map;
 
 public class SnmpHandler
 {
-    static final Logger log = LoggerFactory.getLogger(SnmpHandler.class);
     private Map<SnmpConnection, Boolean> listOfTargets;
     private final ConfigParameters config;
 

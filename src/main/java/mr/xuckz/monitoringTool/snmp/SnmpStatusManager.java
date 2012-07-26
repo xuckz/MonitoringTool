@@ -1,11 +1,12 @@
-package mr.xuckz.monitoringTool.snmp.data;
+package mr.xuckz.monitoringTool.snmp;
 
+import mr.xuckz.monitoringTool.snmp.data.SnmpDataManager;
 import mr.xuckz.monitoringTool.snmp.data.device.SnmpDeviceManager;
 import mr.xuckz.monitoringTool.snmp.data.storage.SnmpStorageManager;
 import mr.xuckz.monitoringTool.snmp.data.system.SnmpSystemManager;
 import mr.xuckz.monitoringTool.snmp.util.SnmpConnection;
 
-public class SnmpManagingStatus extends SnmpDataManager
+public class SnmpStatusManager extends SnmpDataManager
 {
     private SnmpSystemManager snmpSystemManager;
     private SnmpStorageManager snmpStorageManager;
@@ -13,13 +14,14 @@ public class SnmpManagingStatus extends SnmpDataManager
 
     boolean initialized;
 
-    public SnmpManagingStatus(SnmpConnection target)
+    public SnmpStatusManager(SnmpConnection target)
     {
         super(target);
 
-        snmpStorageManager = new SnmpStorageManager(target);
-        snmpSystemManager = new SnmpSystemManager(target);
-        snmpDevices = new SnmpDeviceManager(target);
+        snmpStorageManager = SnmpManagerFactory.getSnmpStorageManager(target);
+        snmpSystemManager = SnmpManagerFactory.getSnmpSystemManager(target);
+        snmpDevices = SnmpManagerFactory.getSnmpDeviceManager(target, target.getClient().getType());
+
         this.initialized = false;
     }
 

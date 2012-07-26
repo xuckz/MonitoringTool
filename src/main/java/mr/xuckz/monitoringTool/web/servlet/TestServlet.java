@@ -130,11 +130,11 @@ public class TestServlet extends HttpServlet
 
             for(SnmpConnection target : snmpHandler.getActiveTargets())
             {
-                response.getWriter().println(target.getSnmpStatus().getSnmpSystemManager().toHtmlString());
+                response.getWriter().println(target.getSnmpStatusManager().getSnmpSystemManager().toHtmlString());
                 response.getWriter().println("<br><br>");
-                response.getWriter().println(target.getSnmpStatus().getSnmpStorageManager().toHtmlString());
+                response.getWriter().println(target.getSnmpStatusManager().getSnmpStorageManager().toHtmlString());
                 response.getWriter().println("<br><br>");
-                response.getWriter().println(target.getSnmpStatus().getSnmpDevices().toHtmlString());
+                response.getWriter().println(target.getSnmpStatusManager().getSnmpDevices().toHtmlString());
 
                 response.getWriter().println("<br><br><br>");
             }
