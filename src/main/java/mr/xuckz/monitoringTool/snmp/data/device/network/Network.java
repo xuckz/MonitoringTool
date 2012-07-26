@@ -33,12 +33,12 @@ public class Network extends SnmpDataObject
 	{
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("Interface #" + this.index + ": " + this.description + "\n");
-		sb.append("Interface #" + this.index + " type: " + this.type + "\n");
-		sb.append("Interface #" + this.index + " total in: " + this.bytes_in + "\n");
-		sb.append("Interface #" + this.index + " total out: " + this.bytes_out + "\n");
-		sb.append("Interface #" + this.index + " bytes in per second: " + this.delta_in + "\n");
-		sb.append("Interface #" + this.index + " bytes out per second: " + this.delta_out);
+		sb.append("Interface #").append(this.index).append(": ").append(this.description).append("\n");
+		sb.append("Interface #").append(this.index).append(" type: ").append(this.type).append("\n");
+		sb.append("Interface #").append(this.index).append(" total in: ").append(bytesToString(this.bytes_in)).append("\n");
+		sb.append("Interface #").append(this.index).append(" total out: ").append(bytesToString(this.bytes_out)).append("\n");
+		sb.append("Interface #").append(this.index).append(" bytes in per second: ").append(bytesToString(this.delta_in)).append("\n");
+		sb.append("Interface #").append(this.index).append(" bytes out per second: ").append(bytesToString(this.delta_out));
 
 		return sb.toString();
 	}

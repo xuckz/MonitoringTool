@@ -3,6 +3,7 @@ package mr.xuckz.monitoringTool.config;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public enum ClientType
 {
 	DESKTOP,

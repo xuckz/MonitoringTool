@@ -23,8 +23,8 @@ public class Cpu extends SnmpDataObject
 	{
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("CPU #" + this.index + " Description: " + description + "\n");
-		sb.append("CPU #" + this.index + "Load: " + load.toString() + " %");
+		sb.append("CPU #").append(this.index).append(" Description: ").append(description).append("\n");
+		sb.append("CPU #").append(this.index).append(" Load: ").append(load.toString()).append(" %");
 
 		return sb.toString();
 	}

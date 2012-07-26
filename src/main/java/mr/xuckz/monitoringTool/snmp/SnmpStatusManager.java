@@ -33,11 +33,8 @@ public class SnmpStatusManager extends SnmpDataManager
         if(!snmpStorageManager.initialize())
             return false;
 
-        if(!snmpDevices.initialize())
-            return false;
-
-        return true;
-    }
+		return snmpDevices.initialize();
+	}
 
     @Override
     public String toString()
@@ -53,11 +50,8 @@ public class SnmpStatusManager extends SnmpDataManager
         if(!snmpStorageManager.update())
             return false;
 
-        if(!snmpDevices.update())
-            return false;
-
-        return true;
-    }
+		return snmpDevices.update();
+	}
 
 	public SnmpSystemManager getSnmpSystemManager()
     {

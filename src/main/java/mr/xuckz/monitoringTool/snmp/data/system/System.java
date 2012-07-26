@@ -37,14 +37,14 @@ public class System extends SnmpDataObject
 	{
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("System #" + this.index + " IP: " + this.ip + "\n");
-		sb.append("System #" + this.index + " Description: " + this.description + "\n");
-		sb.append("System #" + this.index + " Location: " + this.location + "\n");
-		sb.append("System #" + this.index + " Contact: " + this.contact + "\n");
-		sb.append("System #" + this.index + " System Name: " + this.sys_name + "\n");
-		sb.append("System #" + this.index + " Uptime: " + this.uptime + "\n");
-		sb.append("System #" + this.index + " Date: " + this.date + "\n");
-		sb.append("System #" + this.index + " Processes: " + this.num_processes);
+		sb.append("System #").append(this.index).append(" IP: ").append(this.ip).append("\n");
+		sb.append("System #").append(this.index).append(" Description: ").append(this.description).append("\n");
+		sb.append("System #").append(this.index).append(" Location: ").append(this.location).append("\n");
+		sb.append("System #").append(this.index).append(" Contact: ").append(this.contact).append("\n");
+		sb.append("System #").append(this.index).append(" System Name: ").append(this.sys_name).append("\n");
+		sb.append("System #").append(this.index).append(" Uptime: ").append(this.uptime).append("\n");
+		sb.append("System #").append(this.index).append(" Date: ").append(this.date).append("\n");
+		sb.append("System #").append(this.index).append(" Processes: ").append(this.num_processes);
 
 		return sb.toString();
 	}

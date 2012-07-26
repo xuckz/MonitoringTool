@@ -12,7 +12,7 @@ public class StatusService
 
 	}
 
-    public Status retrieveStatus(String ip) throws Exception
+    public Status retrieveStatus(String ip)
     {
         Status status = StatusHandler.retrieveStatus(ip);
 

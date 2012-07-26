@@ -25,7 +25,7 @@ public abstract class SnmpDataManager
 
     public String bytesToString(long bytes)
     {
-        double result = 0.00;
+        double result;
 
         if (bytes <= 1024)
         {
@@ -34,20 +34,20 @@ public abstract class SnmpDataManager
 
         else if (bytes > 1024 && bytes <= 1048576)
         {
-            result = (new Double(bytes) / 1024 * 100);
-            return new Double(new Double(java.lang.Math.round(result)) / 100).toString() + " KB";
+            result = ((double) bytes / 1024 * 100);
+            return Double.toString((double) Math.round(result) / 100) + " KB";
         }
 
         else if (bytes > 1048576 && (bytes <= 1073741824))
         {
-            result = (new Double(bytes) / 1024 / 1024 * 100);
-            return new Double(new Double(java.lang.Math.round(result)) / 100).toString() + " MB";
+            result = ((double) bytes / 1024 / 1024 * 100);
+            return Double.toString((double) Math.round(result) / 100) + " MB";
         }
 
         else
         {
-            result = (new Double(bytes) / 1024 / 1024 / 1024 * 100);
-            return new Double(new Double(java.lang.Math.round(result)) / 100).toString() + " GB";
+            result = ((double) bytes / 1024 / 1024 / 1024 * 100);
+            return Double.toString((double) Math.round(result) / 100) + " GB";
         }
     }
 
@@ -93,11 +93,11 @@ public abstract class SnmpDataManager
         byte[] by = OctetString.fromHexString(var.toString().substring(0, 6)).toByteArray();
 
         int year = 0;
-        for (int i = 0; i < by.length; i++)
-        {
-            //value += ((long) by[i] & 0xffL) << (8 * i); //First byte least significant
-            year = (year << 8) + (by[i] & 0xff);        //First byte most significant
-        }
+		for (byte aBy : by)
+		{
+			//value += ((long) by[i] & 0xffL) << (8 * i); //First byte least significant
+			year = (year << 8) + (aBy & 0xff);        //First byte most significant
+		}
 
         int month = (int)b[0];
         int day = (int)b[1];

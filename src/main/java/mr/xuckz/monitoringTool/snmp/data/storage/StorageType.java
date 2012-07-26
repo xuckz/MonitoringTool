@@ -5,6 +5,7 @@ import org.snmp4j.smi.OID;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public enum StorageType
 {
 	OTHER(new OID("1.3.6.1.2.1.25.2.1.1")),
@@ -20,13 +21,12 @@ public enum StorageType
 	UNKNOWN(new OID());
 
 	private OID oid;
+	private static final Map<OID, StorageType> lookup = new HashMap();
 
 	private StorageType(OID oid)
 	{
 		this.oid = oid;
 	}
-
-	private static final Map<OID, StorageType> lookup = new HashMap();
 
 	static
 	{

@@ -12,10 +12,7 @@ import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SnmpActions
 {
@@ -38,11 +35,7 @@ public class SnmpActions
 
 				List<VariableBinding> listOfVariableBindings = new ArrayList<VariableBinding>();
 
-				if (variableBindings != null)
-				{
-					for (int i = 0; i < variableBindings.length; i++)
-						listOfVariableBindings.add(variableBindings[i]);
-				}
+				Collections.addAll(listOfVariableBindings, variableBindings);
 
 				for (VariableBinding variableBinding : listOfVariableBindings)
 				{
@@ -74,8 +67,7 @@ public class SnmpActions
 
 			if (variableBindings != null)
 			{
-				for (int i = 0; i < variableBindings.length; i++)
-					listOfVariableBindings.add(variableBindings[i]);
+				Collections.addAll(listOfVariableBindings, variableBindings);
 			}
 		}
 

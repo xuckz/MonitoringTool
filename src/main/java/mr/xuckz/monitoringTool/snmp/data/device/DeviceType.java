@@ -5,6 +5,7 @@ import org.snmp4j.smi.OID;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public enum DeviceType
 {
 	CPU(new OID("1.3.6.1.2.1.25.3.1.3")),

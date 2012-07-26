@@ -31,11 +31,11 @@ public class Storage extends SnmpDataObject
 	{
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("Storage #" + this.index + " Description: " + this.description + "\n");
-		sb.append("Storage #" + this.index + " Type: " + this.storageType + "\n");
-		sb.append("Storage #" + this.index + " Size: " + this.bytes_size + "\n");
-		sb.append("Storage #" + this.index + " Used: " + this.bytes_used + "\n");
-		sb.append("Storage #" + this.index + " Free: " + this.bytes_free);
+		sb.append("Storage #").append(this.index).append(" Description: ").append(this.description).append("\n");
+		sb.append("Storage #").append(this.index).append(" Type: ").append(this.storageType).append("\n");
+		sb.append("Storage #").append(this.index).append(" Size: ").append(bytesToString(this.bytes_size)).append("\n");
+		sb.append("Storage #").append(this.index).append(" Used: ").append(bytesToString(this.bytes_used)).append("\n");
+		sb.append("Storage #").append(this.index).append(" Free: ").append(bytesToString(this.bytes_free));
 
 		return sb.toString();
 	}

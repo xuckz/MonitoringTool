@@ -36,12 +36,12 @@ public class Client
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("IP: " + ip + "\n");
-		sb.append("Type: " + type + "\n");
+        sb.append("IP: ").append(ip).append("\n");
+		sb.append("Type: ").append(type).append("\n");
 
         for(String iface : networkInterfaces)
         {
-            sb.append("Interface: " + iface + "\n");
+            sb.append("Interface: ").append(iface).append("\n");
         }
 
         sb.deleteCharAt(sb.length() - 1);
